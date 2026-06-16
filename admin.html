@@ -1,94 +1,120 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Achou Barato 🔥</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <header class="header">
-        <div class="header-container">
-            <h1 class="logo">
-                <span class="logo-icon">🔥</span> Admin
-            </h1>
-            <a href="index.html" class="btn-secondary" style="text-decoration:none;">← Voltar ao site</a>
-        </div>
-    </header>
 
-    <main class="main-content">
-        <div class="container">
-            <h2 style="margin-bottom:20px;">📋 Gerenciar Promoções</h2>
-            <button class="btn-primary" id="addNewPromoBtn">➕ Nova Promoção</button>
-
-            <div class="stats-bar" style="margin-top:20px;">
-                <span id="totalPromos">0 promoções cadastradas</span>
-            </div>
-
-            <section class="promo-feed" id="promoFeed"></section>
-
-            <div class="empty-state" id="emptyState" style="display:none;">
-                <div class="empty-icon">📭</div>
-                <h3>Nenhuma promoção cadastrada</h3>
-                <p>Clique em "Nova Promoção" para começar.</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal de adicionar/editar -->
-    <div class="modal-overlay" id="promoModal" style="display:none;">
-        <div class="modal modal-lg">
-            <button class="modal-close" id="closePromoModal" aria-label="Fechar modal">&times;</button>
-            <h2 id="promoModalTitle">➕ Nova Promoção</h2>
-            <form id="promoForm">
-                <input type="hidden" id="promoId">
-                <div class="form-group">
-                    <label for="promoName">Nome do Produto *</label>
-                    <input type="text" id="promoName" placeholder="Ex: Fone de Ouvido Bluetooth JBL" required>
-                </div>
-                <div class="form-group">
-                    <label for="promoDescription">Descrição *</label>
-                    <textarea id="promoDescription" rows="3" placeholder="Descreva o produto e os benefícios..." required></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="promoPrice">Preço *</label>
-                        <input type="text" id="promoPrice" placeholder="Ex: R$ 49,90" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="promoCategory">Categoria *</label>
-                        <select id="promoCategory" required>
-                            <option value="">Selecione...</option>
-                            <option value="Eletrônicos">📱 Eletrônicos</option>
-                            <option value="Casa e Jardim">🏠 Casa e Jardim</option>
-                            <option value="Moda">👗 Moda</option>
-                            <option value="Beleza">💄 Beleza</option>
-                            <option value="Esportes">⚽ Esportes</option>
-                            <option value="Livros">📚 Livros</option>
-                            <option value="Brinquedos">🧸 Brinquedos</option>
-                            <option value="Alimentos">🍔 Alimentos</option>
-                            <option value="Outros">📦 Outros</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="promoImageUrl">URL da Imagem</label>
-                    <input type="url" id="promoImageUrl" placeholder="https://exemplo.com/imagem.jpg">
-                    <small>Deixe em branco para imagem padrão.</small>
-                </div>
-                <div class="form-group">
-                    <label for="promoAffiliateLink">Link de Afiliado *</label>
-                    <input type="url" id="promoAffiliateLink" placeholder="https://exemplo.com/produto?ref=seulink" required>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-secondary" id="cancelPromoBtn">Cancelar</button>
-                    <button type="submit" class="btn-primary" id="savePromoBtn">💾 Salvar Promoção</button>
-                </div>
-            </form>
+    <!-- Tela de login -->
+    <div id="loginBlock"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-primary); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; padding:20px;">
+        <div
+            style="background: var(--bg-card); padding:30px; border-radius:16px; box-shadow: var(--shadow-modal); text-align:center; max-width:350px; width:100%;">
+            <h2>🔐 Acesso Restrito</h2>
+            <p style="margin:15px 0; color: var(--text-secondary);">Digite a senha para continuar</p>
+            <input type="password" id="passwordInput" placeholder="Senha"
+                style="width:100%; padding:12px; margin-bottom:15px; border:2px solid var(--border-color); border-radius:25px; text-align:center; font-size:1rem;"
+                autofocus>
+            <button id="loginBtn"
+                style="background:var(--accent); color:#fff; border:none; padding:12px; width:100%; border-radius:25px; font-weight:bold; cursor:pointer;">Entrar</button>
+            <p id="loginError" style="color:red; margin-top:10px; display:none;">Senha incorreta!</p>
         </div>
     </div>
+
+    <!-- Conteúdo original do admin (invisível até logar) -->
+    <div id="adminContent" style="display:none;">
+        <header class="header">
+            <div class="header-container">
+                <h1 class="logo">
+                    <span class="logo-icon">🔥</span> Admin
+                </h1>
+                <a href="index.html" class="btn-secondary" style="text-decoration:none;">← Voltar ao site</a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <h2 style="margin-bottom:20px;">📋 Gerenciar Promoções</h2>
+                <button class="btn-primary" id="addNewPromoBtn">➕ Nova Promoção</button>
+
+                <div class="stats-bar" style="margin-top:20px;">
+                    <span id="totalPromos">0 promoções cadastradas</span>
+                </div>
+
+                <section class="promo-feed" id="promoFeed"></section>
+
+                <div class="empty-state" id="emptyState" style="display:none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>Nenhuma promoção cadastrada</h3>
+                    <p>Clique em "Nova Promoção" para começar.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal de adicionar/editar -->
+        <div class="modal-overlay" id="promoModal" style="display:none;">
+            <div class="modal modal-lg">
+                <button class="modal-close" id="closePromoModal" aria-label="Fechar modal">&times;</button>
+                <h2 id="promoModalTitle">➕ Nova Promoção</h2>
+                <form id="promoForm">
+                    <input type="hidden" id="promoId">
+                    <div class="form-group">
+                        <label for="promoName">Nome do Produto *</label>
+                        <input type="text" id="promoName" placeholder="Ex: Fone de Ouvido Bluetooth JBL" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="promoDescription">Descrição *</label>
+                        <textarea id="promoDescription" rows="3" placeholder="Descreva o produto e os benefícios..."
+                            required></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="promoPrice">Preço *</label>
+                            <input type="text" id="promoPrice" placeholder="Ex: R$ 49,90" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="promoCategory">Categoria *</label>
+                            <select id="promoCategory" required>
+                                <option value="">Selecione...</option>
+                                <option value="Eletrônicos">📱 Eletrônicos</option>
+                                <option value="Casa e Jardim">🏠 Casa e Jardim</option>
+                                <option value="Moda">👗 Moda</option>
+                                <option value="Beleza">💄 Beleza</option>
+                                <option value="Esportes">⚽ Esportes</option>
+                                <option value="Livros">📚 Livros</option>
+                                <option value="Brinquedos">🧸 Brinquedos</option>
+                                <option value="Alimentos">🍔 Alimentos</option>
+                                <option value="Outros">📦 Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="promoImageUrl">URL da Imagem</label>
+                        <input type="url" id="promoImageUrl" placeholder="https://exemplo.com/imagem.jpg">
+                        <small>Deixe em branco para imagem padrão.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="promoAffiliateLink">Link de Afiliado *</label>
+                        <input type="url" id="promoAffiliateLink" placeholder="https://exemplo.com/produto?ref=seulink"
+                            required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelPromoBtn">Cancelar</button>
+                        <button type="submit" class="btn-primary" id="savePromoBtn">💾 Salvar Promoção</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <script src="script.js"></script>
     <script src="admin.js"></script>
 </body>
+
 </html>
