@@ -1,43 +1,51 @@
 /* ============================================================
- *  admin.js - Painel administrativo (com senha)
+ *  admin.js - Painel administrativo com senha
  * ============================================================ */
 
-// ⚠️ DEFINA SUA SENHA AQUI (pode mudar quando quiser)
+// ⚠️ DEFINA SUA SENHA AQUI (padrão: kauan123)
 const ADMIN_PASSWORD = '10903040k12';
 
-// Verifica se já está autenticado na sessão
-if (sessionStorage.getItem('adminAuth') !== 'true') {
-    // Mostra a tela de login
-    document.getElementById('loginBlock').style.display = 'flex';
-    document.getElementById('adminContent').style.display = 'none';
+// ============================================================
+// VERIFICAÇÃO DE AUTENTICAÇÃO
+// ============================================================
+function verificarLogin() {
+    if (sessionStorage.getItem('adminAuth') === 'true') {
+        // Já está logado, mostra o painel imediatamente
+        document.getElementById('loginBlock').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        iniciarAdmin();
+    } else {
+        // Mostra tela de login
+        document.getElementById('loginBlock').style.display = 'flex';
+        document.getElementById('adminContent').style.display = 'none';
 
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        const senha = document.getElementById('passwordInput').value;
-        if (senha === ADMIN_PASSWORD) {
-            sessionStorage.setItem('adminAuth', 'true');
-            document.getElementById('loginBlock').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-            // Inicializa a interface normalmente
-            iniciarAdmin();
-        } else {
-            document.getElementById('loginError').style.display = 'block';
-            document.getElementById('passwordInput').value = '';
-        }
-    });
-} else {
-    // Já está autenticado, esconde o login e mostra o conteúdo
-    document.getElementById('loginBlock').style.display = 'none';
-    document.getElementById('adminContent').style.display = 'block';
-    iniciarAdmin();
+        // Evento do botão de login
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const senha = document.getElementById('passwordInput').value;
+            if (senha === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminAuth', 'true');
+                document.getElementById('loginBlock').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                iniciarAdmin();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+            }
+        });
+
+        // Também permite pressionar Enter no campo de senha
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('loginBtn').click();
+            }
+        });
+    }
 }
 
-// Função que contém toda a lógica original do admin.js
+// ============================================================
+// LÓGICA DO PAINEL ADMIN (só é executada após login)
+// ============================================================
 function iniciarAdmin() {
-
-    /* ============================================================
-     *  admin.js - Painel administrativo (versão JSONbin)
-     * ============================================================ */
-
     const promoModal = document.getElementById('promoModal');
     const promoForm = document.getElementById('promoForm');
     const promoIdInput = document.getElementById('promoId');
@@ -55,7 +63,6 @@ function iniciarAdmin() {
         promoIdInput.value = '';
         if (id) {
             modalTitle.textContent = '✏️ Editar Promoção';
-            // Como getPromotions agora é async, precisamos tratar
             getPromotions().then(promotions => {
                 const promo = promotions.find(p => p.id === id);
                 if (promo) {
@@ -128,7 +135,7 @@ function iniciarAdmin() {
     promoModal.addEventListener('click', (e) => { if (e.target === promoModal) closePromoModal(); });
     promoForm.addEventListener('submit', (e) => { e.preventDefault(); saveFromForm(); });
 
-    // Estender renderFeed para incluir botões de admin (agora async)
+    // Estender renderFeed para incluir botões de admin
     const originalRender = renderFeed;
     renderFeed = async function () {
         await originalRender();
@@ -139,7 +146,7 @@ function iniciarAdmin() {
                 const div = document.createElement('div');
                 div.className = 'card-admin-actions';
                 div.innerHTML = `<button class="btn-edit-card" data-id="${id}">✏️</button>
-                             <button class="btn-delete-card" data-id="${id}">🗑️</button>`;
+                                 <button class="btn-delete-card" data-id="${id}">🗑️</button>`;
                 footer.appendChild(div);
             }
         });
@@ -164,13 +171,9 @@ function iniciarAdmin() {
         }
     });
 
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', async () => {
-        await renderFeed();
-    });
-
-    // No final, chame a renderização inicial:
-    document.addEventListener('DOMContentLoaded', async () => {
-        await renderFeed();
-    });
+    // Renderização inicial do feed
+    renderFeed();
 }
+
+// Inicializa o processo de login
+document.addEventListener('DOMContentLoaded', verificarLogin);
