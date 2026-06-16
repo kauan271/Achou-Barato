@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achou Barato 🔥 - Promoções de Afiliados</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">
+                <span class="logo-icon">🔥</span> Achou Barato
+            </h1>
+            <button class="btn-icon" id="themeToggle" title="Alternar tema" aria-label="Alternar tema claro/escuro">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="filters-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Pesquisar promoções..." aria-label="Pesquisar promoções">
+                </div>
+                <div class="category-filter">
+                    <select id="categoryFilter" aria-label="Filtrar por categoria">
+                        <option value="todas">📂 Todas as categorias</option>
+                        <option value="Eletrônicos">📱 Eletrônicos</option>
+                        <option value="Casa e Jardim">🏠 Casa e Jardim</option>
+                        <option value="Moda">👗 Moda</option>
+                        <option value="Beleza">💄 Beleza</option>
+                        <option value="Esportes">⚽ Esportes</option>
+                        <option value="Livros">📚 Livros</option>
+                        <option value="Brinquedos">🧸 Brinquedos</option>
+                        <option value="Alimentos">🍔 Alimentos</option>
+                        <option value="Outros">📦 Outros</option>
+                    </select>
+                </div>
+                <button class="btn-clear-filters" id="clearFiltersBtn" style="display:none;">✕ Limpar filtros</button>
+            </section>
+
+            <div class="stats-bar">
+                <span id="totalPromos">0 promoções encontradas</span>
+            </div>
+
+            <section class="promo-feed" id="promoFeed"></section>
+
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <div class="empty-icon">📭</div>
+                <h3>Nenhuma promoção encontrada</h3>
+                <p>Tente ajustar sua pesquisa ou filtro, ou aguarde novas ofertas!</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© <span id="currentYear"></span> Achou Barato 🔥</p>
+            <p class="footer-disclaimer">* Preços sujeitos a alteração. Verifique o valor final no site do vendedor.</p>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5543996538900?text=Olá!%20Quero%20saber%20mais%20sobre%20as%20promoções!"
+       class="whatsapp-float"
+       target="_blank"
+       rel="noopener noreferrer"
+       aria-label="Fale conosco pelo WhatsApp">
+        <span class="whatsapp-icon">💬</span>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
